@@ -5,5 +5,5 @@
 #define random(x) (rand () % x)
 
 int isNum(char*, int);
-int isPath(char *, int);
-void BuildDataFile(char*);
+int isPath(char *);
+void BuildDataFile(char *);

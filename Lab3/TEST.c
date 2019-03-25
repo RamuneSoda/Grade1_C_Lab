@@ -33,11 +33,17 @@ int isPath(char *pPath)
                     case '|':
                         return 0;
                     case '\\':
-                        return 0;
+                        if(pPath[i+1] == '\\')
+                        {
+                            break;
+                        }
+                        else
+                            return 0;
                     default:
                         break;
                 }
             }
+            return 1;
         }
         else
         {
@@ -50,7 +56,9 @@ int isPath(char *pPath)
             return 0;
         }
     }
-    return 1;
+//    else if()//是相对路径吗？
+    else 
+        return 0;
 }
 
 int main()
