@@ -12,9 +12,31 @@ int isPath(char *pPath)
     {
         if(strstr(pPath, ":/") == (pPath + 1) || strstr(pPath, ":\\") == (pPath + 1) )
         {
-            for(int i = 2; i <= len -1; i++)
+            for(int i = 0; i <= len -1; i++)
             {
-                
+                switch (pPath[i])
+                {
+                    case ':':
+                        if(i != 1)
+                        {
+                            return 0;
+                        }
+                        break;
+                    case '*':
+                        return 0;
+                    case '?':
+                        return 0;                    
+                    case '<':
+                        return 0;
+                    case '>':
+                        return 0;
+                    case '|':
+                        return 0;
+                    case '\\':
+                        return 0;
+                    default:
+                        break;
+                }
             }
         }
         else
