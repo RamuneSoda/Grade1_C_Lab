@@ -9,7 +9,12 @@ void run (int argc , char* argv[])
     int flag = 0;
 
     CONF info;
-    //为结构体变量各个分量初始化默认值
+    info.maxvalue1 = 50;
+    info.minvalue1 = 0;
+    info.maxvalue2 = 20;
+    info.minvalue2 = 0;
+    info.recordcount1 = 50;
+    info.recordcount2 = 1;//为结构体变量各个分量初始化默认值
 
     switch (argc)
     {
