@@ -27,41 +27,43 @@ int isNum(char *str, int n)
     return k;
 }
 
-void BuildDataFile(char *str)
+void BuildDataFile(CONF info)
 {
-    //从配置信息变量中获取数据文件存放目录
-    if(//目录不存在(取了反))
-    {
-        //创建存放数据文件的目录
-        if(//创建不成功)
-        {
-            //输出错误信息
-            return;
-        }
-    }
+    mkdir_m(info.filesavepath);
+    int tem[1000][3];
+    puts(info.filename);
+    puts(info.filesavepath);
+    FILE *op;
+    char RealPath[1000];
+    strcpy(RealPath, info.filesavepath);
+    strcat(strcat(RealPath,"/"), info.filename); //从配置信息变量中获取数据文件存放目录与文件名，将其拼装为完整的文件路径
+    puts(RealPath);
+    op = fopen (RealPath, "w");//打开文件并清空文件中的已有内容
+   
 
-    //从配置信息变量中获取数据文件存放目录与文件名，将其拼装为完整的文件路径
-    //打开文件
-    if(//文件打开成功？)
+    if(op != NULL)//文件打开成功？
     {
-        //清空文件中的已有内容
         //从配置信息中取出记录条数并写入文件
-        for(//执行数据条数次)
+        for(int i = 0; i < info.number; i++)//执行数据条数次
         {
-            //调用随机函数获取一个指定范围内的整数，作为第一个元素
-            //调用随机函数获取一个指定范围内的整数，作为第二个元素
-            while(//第一、第二个元素相等)
+            tem[i][0] = random(info.minvalue1,info.maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第一个元素
+            tem[i][1] = random(info.minvalue1,info.maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第二个元素
+            while(tem[i][0] == tem[i][1])//第一、第二个元素相等
             {
-                //调用随机函数获取一个指定范围内的整数，作为第二个元素
+                tem[i][1] = random(info.minvalue1,info.maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第二个元素
             }
-            //调用随机函数获取一个指定范围内的整数，作为第三个元素
+            tem[i][2] = random(info.minvalue2,info.maxvalue2);//调用随机函数获取一个指定范围内的整数，作为第三个元素
             //将三个元素形成一条记录数据，暂存入数据容器
         }
-        //将暂存在数据容器中的数据写入数据记录文件保存并关闭文件，输出文件生成成功提示信息
+        for(int i =0; i < info.number; i++)
+        {
+            fprintf(op, "%d %d %d\n", tem[i][0], tem[i][1], tem[i][2]);//将暂存在数据容器中的数据写入数据记录文件保存并关闭文件，输出文件生成成功提示信息
+        }
+        
     }
     else
     {
-        //输出错误提示
+        printf("OPEN FILE ERROR!\n");//输出错误提示
         return;
     }    
 }
@@ -73,7 +75,7 @@ int isPath(char *pPath)
     {
         return 0;
     }
-    if(pPath[0] >= 'A' && pPath[0] <= 'Z') //是绝对路径吗？
+    if((pPath[0] >= 'A') && (pPath[0] <= 'Z')) //是绝对路径吗？
     {
         if(strstr(pPath, ":/") == (pPath + 1) || strstr(pPath, ":\\") == (pPath + 1) )
         {
@@ -116,7 +118,7 @@ int isPath(char *pPath)
         }
         
 
-        if(strstr(pPath, "\\") == (pPath + len -1) ||(strchr(pPath, '/') == (pPath + len )))
+        if(strstr(pPath, "\\") == (pPath + len -1) ||(strchr(pPath, '/') == (pPath + len)))
         {
             return 0;
         }
@@ -124,4 +126,59 @@ int isPath(char *pPath)
 //    else if()//是相对路径吗？
     else 
         return 0;
+}
+
+void DivPath(char *path, CONF info)
+{
+    int i;
+    for(i = strlen(path) - 1; (path[i] != '\\') && (path[i] != '/'); i--);//从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
+    if(path[i] == '\\')
+    {
+        strncpy(info.filesavepath, path, i - 1);
+        info.filesavepath[i-1] = '\0';
+    }
+    else
+    {
+        strncpy(info.filesavepath, path, i);
+        info.filesavepath[i + 1] = '\0';
+    }
+    strncpy(info.filename, path + i + 1, strlen(path) - i -1);
+    
+    
+}
+
+int isFileExist(char *path)
+{
+    return -access(path, 0);
+}
+
+void mkdir_m(char *muldir)
+{
+	int i, len;
+	char str[512];
+	strcpy(str, muldir);
+	len = strlen(str);
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] == '/' || str[i] == '\\')
+		{
+			str[i] = '\0';
+			if (isFileExist(str) == 0)
+			{
+				if (_mkdir(str) != 0)
+				{
+					printf("Directory creation failed!\n");
+				}
+			}
+			str[i] = '\\';
+		}
+	}
+	if (len > 0 && isFileExist(str) == 0)
+	{
+		if (_mkdir(str) != 0)
+		{
+			printf("Directory creation failed!\n");
+		}
+	}
+	_chdir(str);
 }
