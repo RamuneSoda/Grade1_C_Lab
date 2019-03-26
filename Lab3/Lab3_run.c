@@ -5,8 +5,9 @@
 
 void run (int argc , char* argv[])
 {
-    char input[100000];
-    int flag = 0;
+    char input[1000] = 'A\0';
+    int i = 0,flag = 0;
+    srand((int)time(0));
 
     CONF info;
     info.maxvalue1 = 50;
@@ -19,51 +20,95 @@ void run (int argc , char* argv[])
     switch (argc)
     {
         case 1:
-            //提示用户输入记录条数
-            while(isNum(input, strlen(input)))
+            printf("Input the lines of the data\n");//提示用户输入记录条数
+            while()
             {
-                //提示错误信息
+                scanf("%s",input);
+                fflush(stdin);
+                if(isNum(input, strlen(input)))
+                {
+                    break;
+                }
+                printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
             }
-            //询问是否随机记录条数  
-            if(//是)
+            printf("Randomly generate the lines of data?(Y/N)\n");//询问是否随机生成记录条数
+
+            while()
             {
-                //随机生成记录条数数写入配置信息变量
+                scanf("%s",input);
+                fflush(stdin);
+                if((input[0] == 'Y') || (input[0] == 'N'))
+                {
+                    break;
+                }
+                printf("INPUT ERROR! PLEASE RETRY.\n");
+                printf("Randomly generate the lines of data?(Y/N)\n");
             }
-            else//否
+
+            if(input[0] == 'Y')//是
             {
-                //将用户输入的记录数信息写入配置信息变量
+                info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
             }
+            else //否
+            {
+                info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
+            }
+               
             flag++;
             break;
         case 2:
             if(isNum(argv[1], strlen(argv[1])))//命令行参数是数值？
             {
-                //从命令行参数中取出记录条数信息写入配置信息变量
+                info.number = atoi(argv[1]);//从命令行参数中取出记录条数信息写入配置信息变量
                 flag++;
                 break;
             }
 
             if(isPath(argv[1], strlen(argv[1]))) //命令行参数是否合法？
             {
-                //从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
-                //提示用户输入记录条数
-                while(isNum(input, strlen(input)))
+                for(i = strlen(argv[1]) - 1; (argv[1][i] != '\\') && (argv[1][i] != '/'); i--);//从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
+                strncpy(info.filesavepath, argv[1] , i);
+                strncpy(info.filename, argv[1] + i + 1, strlen(argv[1]) - i);
+
+                printf("Input the lines of the data\n");//提示用户输入记录条数
+        
+                while()
                 {
-                    //提示错误信息
+                    scanf("%s",input);
+                    fflush(stdin);
+                    if(isNum(input, strlen(input)))
+                    {
+                        break;
+                    }
+                    printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
                 }
-                //询问是否随机记录条数  
-                if(//是)
+                
+                printf("Randomly generate the lines of data?(Y/N)\n");//询问是否随机生成记录条数
+
+                while()
                 {
-                    //随机生成记录条数数写入配置信息变量
+                    scanf("%s",input);
+                    fflush(stdin);
+                    if((input[0] == 'Y') || (input[0] == 'N'))
+                    {
+                        break;
+                    }
+                    printf("INPUT ERROR! PLEASE RETRY.\n");
+                    printf("Randomly generate the lines of data?(Y/N)\n");
                 }
-                else//否
+
+                if(input[0] == 'Y')//是
                 {
-                //将用户输入的记录数信息写入配置信息变量
+                    info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
+                }
+                else //否
+                {
+                    info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
                 }
             }
             else
             {
-                //提示命令行参数不合法
+                printf("Command-line Argument ERROR!\n");//提示命令行参数不合法
                 return;
             }
             break;
