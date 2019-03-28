@@ -11,7 +11,9 @@
 
 int isNum(char*, int);
 int isPath(char *);
-void DivPath(char *, CONF);
-void BuildDataFile(CONF);
+void DivPath(char *, CONF*);
+void BuildDataFile(CONF *);
 int isFileExist(char *);
 void mkdir_m(char *);
+int isAbsPath(char *);
+int isRelPath(char *);

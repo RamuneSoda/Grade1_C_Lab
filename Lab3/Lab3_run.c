@@ -5,7 +5,7 @@
 
 void run (int argc , char* argv[])
 {
-    char input[1000];
+	char input[1000], tem[1000];
     int i = 0,flag = 0;
     srand((int)time(0));
 
@@ -29,15 +29,16 @@ void run (int argc , char* argv[])
                 {
                     break;
                 }
-                printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
+                printf("INPUT ERROR! PLEASE INPUT AN NUMBER!\n");//提示错误信息
             }
             printf("Randomly generate the number of data?(Y/N)\n");//询问是否随机生成记录条数
 
+
             while(1)
             {
-                scanf("%s",input);
+                scanf("%s",tem);
                 fflush(stdin);
-                if((input[0] == 'Y') || (input[0] == 'N'))
+                if((tem[0] == 'Y') || (tem[0] == 'N'))
                 {
                     break;
                 }
@@ -45,7 +46,7 @@ void run (int argc , char* argv[])
                 printf("Randomly generate the number of data?(Y/N)\n");
             }
 
-            if(input[0] == 'Y')//是
+            if(tem[0] == 'Y')//是
             {
                 info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
             }
@@ -66,7 +67,7 @@ void run (int argc , char* argv[])
 
             if(isPath(argv[1])) //命令行参数是否合法？
             {
-                DivPath(argv[1], info);//从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
+                DivPath(argv[1], &info);//从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
 
                 printf("Input the number of the data\n");//提示用户输入记录条数
         
@@ -85,9 +86,9 @@ void run (int argc , char* argv[])
 
                 while(1)
                 {
-                    scanf("%s",input);
+                    scanf("%s", tem);
                     fflush(stdin);
-                    if((input[0] == 'Y') || (input[0] == 'N'))
+                    if((tem[0] == 'Y') || (tem[0] == 'N'))
                     {
                         break;
                     }
@@ -95,7 +96,7 @@ void run (int argc , char* argv[])
                     printf("Randomly generate the number of data?(Y/N)\n");
                 }
 
-                if(input[0] == 'Y')//是
+                if(tem[0] == 'Y')//是
                 {
                     info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
                 }
@@ -116,7 +117,7 @@ void run (int argc , char* argv[])
                 info.number = atoi(argv[1]);//从命令行参数中取出第一个参数作为记录条数存入配置信息变量
                 if(isPath(argv[2])) //第二个参数是否合法？
                 {
-                    DivPath(argv[2], info);//从第二个参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
+                    DivPath(argv[2], &info);//从第二个参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
                     break;
                 }
                 else
@@ -132,7 +133,7 @@ void run (int argc , char* argv[])
                     info.number = atoi(argv[2]);//从命令行参数中取出第二个参数作为记录条数存入配置信息变量
                     if(isPath(argv[1])) //第一个参数是否合法？
                     {
-                        DivPath(argv[1], info);//从命令行参数中取出第一个参数——文件路径拆分成文件名和文件存储目录写入配置信息变量
+                        DivPath(argv[1], &info);//从命令行参数中取出第一个参数——文件路径拆分成文件名和文件存储目录写入配置信息变量
                         break;
                     }
                     else
@@ -165,8 +166,8 @@ void run (int argc , char* argv[])
             }
             printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
         }
-        DivPath(input, info);//将用户输入的文件路径拆分成文件名和文件存储目录写入配置信息变量
+        DivPath(input, &info);//将用户输入的文件路径拆分成文件名和文件存储目录写入配置信息变量
     }
 
-    BuildDataFile(info);//调用生成数据文件函数，根据配置信息生成数据文件(流程见图3-2)
+    BuildDataFile(&info);//调用生成数据文件函数，根据配置信息生成数据文件(流程见图3-2)
 }
