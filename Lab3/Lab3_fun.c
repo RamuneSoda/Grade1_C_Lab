@@ -32,6 +32,7 @@ void BuildDataFile(CONF *info)
     mkdir_m(info->filesavepath);
     int tem[1000][3];
     FILE *op;
+
     char RealPath[1000];
     strcpy(RealPath, info->filesavepath);
     strcat(strcat(RealPath,"/"), info->filename); //从配置信息变量中获取数据文件存放目录与文件名，将其拼装为完整的文件路径
@@ -73,10 +74,11 @@ int isPath(char *path)
         return 0;
     }
 
-    if((isAbsPath(path) == 0)/* || (isRelPath(path) == 0)*/)
+    if((isAbsPath(path) == 0) && (isRelPath(path) == 0))
     {
         return 0;
     }
+
     return 1;
 
 }
@@ -84,9 +86,36 @@ int isPath(char *path)
 void DivPath(char *path,  CONF *info_1)
 {
     int i;
+    if(isRelPath(path))
+    {
+        
+        char cwd[100];
+        char *index1, *index2, *name;
+        int cut = count(path);
+
+        _getcwd(cwd,sizeof(cwd));
+
+        for(i = 1; i <= cut ; i++)
+        {
+            index1 = strrchr(cwd,'/');
+            index2 = strrchr(cwd,'\\');
+            if(index1 > index2)
+            {
+                *index1 = '\0';
+            }
+            else
+            {
+                *index2 = '\0';
+            }
+        }
+        name = GetOffset(path) + path - 1;
+        strcat(cwd, name);
+        strcpy(path, cwd);
+    }
+        
     for(i = strlen(path) - 1; (path[i] != '\\') && (path[i] != '/'); i--);//从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
-     strncpy(info_1->filesavepath, path, i);
-	 info_1->filesavepath[i] = '\0';
+    strncpy(info_1->filesavepath, path, i);
+	info_1->filesavepath[i] = '\0';
     
     strncpy(info_1->filename, path + i + 1, strlen(path) - i -1);
 	info_1->filename[strlen(path) - i - 1] = '\0';
@@ -133,7 +162,7 @@ void mkdir_m(char *muldir)
 
 int isAbsPath(char *path)
 {
-    char ban[]={'*','?','<','>','|'};
+    char ban[]={'*','?','<','>','|',':'};
 
     if((path[0] < 'A') || (path[0] > 'Z'))//盘符要正确
     {
@@ -144,9 +173,10 @@ int isAbsPath(char *path)
     {
         return 0;
     }
-    for(int i = 0; i < 5; i++)
+
+    for(int i = 0; i < 5; i++)//不能出现非法字符
     {
-        for(int j = 0; j < strlen(path); j++)
+        for(int j = 3; j < strlen(path); j++)
         {
             if(ban[i] == path[j])
             {
@@ -159,5 +189,70 @@ int isAbsPath(char *path)
 
 int isRelPath(char *path)
 {
-    return 0;
+    int i, j;
+    char ban[]={'*','?','<','>','|',':'};
+    i = j = 0;
+
+    while(strstr(path, "../") == path)
+    {
+        path += 3;
+        i++;
+    }
+
+    while(strstr(path, "./") == path)
+    {
+        path += 2;
+        j++;
+    }
+
+    if(i != 0 && j != 0)//"./"与"../"不能同时出现
+    {
+        return 0;
+    }
+
+    for(int i = 0; i < 5; i++)//不能出现非法字符
+    {
+        for(int j = 0; j < strlen(path); j++)
+        {
+            if(ban[i] == path[j])
+            {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
+
+int GetOffset(char *path)
+{
+    int offset = 0;
+    while(strstr(path, "../") == path)
+    {
+        path += 3;
+        offset += 3;
+    }
+
+    while(strstr(path, "./") == path)
+    {
+        path += 2;
+        offset += 2;
+    }
+    return offset;
+}
+
+    int count(char* path)
+    {
+        int counter = 0;
+        while(strstr(path, "../") == path)
+        {
+            path += 3;
+            counter++;
+        }
+
+        while(strstr(path, "./") == path)
+        {
+            path += 2;
+            counter++;
+        }
+        return counter;
+    }

@@ -17,3 +17,5 @@ int isFileExist(char *);
 void mkdir_m(char *);
 int isAbsPath(char *);
 int isRelPath(char *);
+int GetOffset(char *);
+int count(char *);
