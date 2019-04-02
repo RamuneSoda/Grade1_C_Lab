@@ -1,122 +1,173 @@
-#include <Lab3_run.h>
-#include <Lab3_fun.h>
-#include <Lab3_data.h>
+#include "Lab3_run.h"
+#include "Lab3_fun.h"
+
 
 
 void run (int argc , char* argv[])
 {
-    char input[100000];
-    int flag = 0;
+	char input[1000], tem[1000];
+    int i = 0,flag = 0;
+    srand((int)time(0));
 
     CONF info;
-    info.maxvalue1 = 40; //为结构体变量各个分量初始化默认值
-    info.minvalue1 = 5;
+    info.maxvalue1 = 50;
+    info.minvalue1 = 0;
     info.maxvalue2 = 20;
-    info.minvalue2 = 1;
-    info.recordcount1 = 20;
-    info.recordcount2 = 1;
+    info.minvalue2 = 0;
+    info.recordcount1 = 50;
+    info.recordcount2 = 1;//为结构体变量各个分量初始化默认值
 
     switch (argc)
     {
         case 1:
-            //提示用户输入记录条数
-            while(isNum(input, strlen(input)))
+            printf("Input the lines of the data\n");//提示用户输入记录条数
+            while(1)
             {
-                //提示错误信息
+                scanf("%s",input);
+                fflush(stdin);
+                if(isNum(input, strlen(input)))
+                {
+                    break;
+                }
+                printf("INPUT ERROR! PLEASE INPUT AN NUMBER!\n");//提示错误信息
             }
-            //询问是否随机记录条数  
-            if(//是)
+            printf("Randomly generate the number of data?(Y/N)\n");//询问是否随机生成记录条数
+
+
+            while(1)
             {
-                //随机生成记录条数数写入配置信息变量
+                scanf("%s",tem);
+                fflush(stdin);
+                if((tem[0] == 'Y') || (tem[0] == 'N'))
+                {
+                    break;
+                }
+                printf("INPUT ERROR! PLEASE RETRY.\n");
+                printf("Randomly generate the number of data?(Y/N)\n");
             }
-            else//否
+
+            if(tem[0] == 'Y')//是
             {
-                //将用户输入的记录数信息写入配置信息变量
+                info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
             }
+            else //否
+            {
+                info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
+            }
+               
             flag++;
             break;
         case 2:
             if(isNum(argv[1], strlen(argv[1])))//命令行参数是数值？
             {
-                //从命令行参数中取出记录条数信息写入配置信息变量
+                info.number = atoi(argv[1]);//从命令行参数中取出记录条数信息写入配置信息变量
                 flag++;
                 break;
             }
 
-            if(isPath(argv[1], strlen(argv[1]))) //命令行参数是否合法？
+            if(isPath(argv[1])) //命令行参数是否合法？
             {
-                //从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
-                //提示用户输入记录条数
-                while(isNum(input, strlen(input)))
+                DivPath(argv[1], &info);//从命令行参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
+
+                printf("Input the number of the data\n");//提示用户输入记录条数
+        
+                while(1)
                 {
-                    //提示错误信息
+                    scanf("%s",input);
+                    fflush(stdin);
+                    if(isNum(input, strlen(input)))
+                    {
+                        break;
+                    }
+                    printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
                 }
-                //询问是否随机记录条数  
-                if(//是)
+                
+                printf("Randomly generate the number of data?(Y/N)\n");//询问是否随机生成记录条数
+
+                while(1)
                 {
-                    //随机生成记录条数数写入配置信息变量
+                    scanf("%s", tem);
+                    fflush(stdin);
+                    if((tem[0] == 'Y') || (tem[0] == 'N'))
+                    {
+                        break;
+                    }
+                    printf("INPUT ERROR! PLEASE RETRY.\n");
+                    printf("Randomly generate the number of data?(Y/N)\n");
                 }
-                else//否
+
+                if(tem[0] == 'Y')//是
                 {
-                //将用户输入的记录数信息写入配置信息变量
+                    info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
+                }
+                else //否
+                {
+                    info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
                 }
             }
             else
             {
-                //提示命令行参数不合法
+                printf("Command-line Argument ERROR!\n");//提示命令行参数不合法
                 return;
             }
             break;
         case 3:
-            if(//第一个参数是数值)
+            if(isNum(argv[1], strlen(argv[1])))//第一个参数是数值
             {
-                //从命令行参数中取出第一个参数作为记录条数存入配置信息变量
-                if(isPath(argv[2],strlen(argv[2]))) //第二个参数是否合法？
+                info.number = atoi(argv[1]);//从命令行参数中取出第一个参数作为记录条数存入配置信息变量
+                if(isPath(argv[2])) //第二个参数是否合法？
                 {
-                    //从命令行参数中取出第二个参数作为文件存储路径，拆分后存入配置信息变量
+                    DivPath(argv[2], &info);//从第二个参数中取出文件路径拆分成文件名和文件存储目录写入配置信息变量
                     break;
                 }
                 else
                 {
-                    //提示命令行参数不合法
+                    printf("Command-line Argument ERROR!\n");//提示命令行参数不合法
                     return;
                 }               
             }
             else
             {
-                if(//第二个参数是数值？)
+                if(isNum(argv[2], strlen(argv[2])))//第二个参数是数值？
                 {
-                    //从命令行参数中取出第二个参数作为记录条数存入配置信息变量
-                     if(isPath(argv[1],strlen(argv[1]))) //第一个参数是否合法？
+                    info.number = atoi(argv[2]);//从命令行参数中取出第二个参数作为记录条数存入配置信息变量
+                    if(isPath(argv[1])) //第一个参数是否合法？
                     {
-                        //从命令行参数中取出第二个参数作为文件存储路径，拆分后存入配置信息变量
+                        DivPath(argv[1], &info);//从命令行参数中取出第一个参数——文件路径拆分成文件名和文件存储目录写入配置信息变量
                         break;
                     }
                     else
                     {
-                        //提示命令行参数不合法
+                        printf("Command-line Argument ERROR!\n");//提示命令行参数不合法
                         return;
                     }               
                 }
                 else
                 {
-                    //提示用户输入的两个命令行参数中找不到记录条数参数
+                    printf("Can't find any parameter which records the number of data!\n");//提示用户输入的两个命令行参数中找不到记录条数参数
                     return;
                 }                
             }
         default:
+            printf("Too many parameter!\n");
             break;
     }
 
-    if(flag == 0)
+    if(flag == 1)
     {
-        //提示用户输入文件存储路径
-        while(isPath(input,strlen(input)))
+        printf("Please input the path\n");//提示用户输入文件存储路径
+        while(1)
         {
-            //提示错误信息
+            scanf("%s",input);
+            fflush(stdin);
+            if(isPath(input))
+            {
+                break;
+            }
+            printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
         }
-        //将用户输入的文件路径拆分成文件名和文件存储目录写入配置信息变量
+        DivPath(input, &info);//将用户输入的文件路径拆分成文件名和文件存储目录写入配置信息变量
     }
 
-    //调用生成数据文件函数，根据配置信息生成数据文件(流程见图3-2)
+    BuildDataFile(&info);//调用生成数据文件函数，根据配置信息生成数据文件(流程见图3-2)
 }
