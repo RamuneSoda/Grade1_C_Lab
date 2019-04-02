@@ -18,3 +18,7 @@ Lab3/IsFileExist.c
 Lab3/mkdir.c
 Lab3/muldir.c
 Lab3/sprt.c
+*.ipch
+*.bin
+*.ipch
+Lab3/.vscode/ipch/461a38483a80be44/LAB3_RUN.ipch

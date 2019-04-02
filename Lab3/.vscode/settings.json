@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "direct.h": "c"
+        "direct.h": "c",
+        "lab3_fun.h": "c",
+        "lab3_run.h": "c",
+        "io.h": "c"
     }
 }

@@ -11,11 +11,11 @@
 
 int isNum(char*, int);
 int isPath(char *);
-void DivPath(char *, CONF*);
-void BuildDataFile(CONF *);
-int isFileExist(char *);
-void mkdir_m(char *);
 int isAbsPath(char *);
 int isRelPath(char *);
+int isFileExist(char *);
+void DivPath(char *, CONF*);
+void BuildDataFile(CONF *);
+void mkdir_m(char *);
 int GetOffset(char *);
 int count(char *);
