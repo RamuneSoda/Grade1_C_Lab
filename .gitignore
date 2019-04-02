@@ -22,3 +22,4 @@ Lab3/sprt.c
 *.bin
 *.ipch
 Lab3/.vscode/ipch/461a38483a80be44/LAB3_RUN.ipch
+*.ipch
