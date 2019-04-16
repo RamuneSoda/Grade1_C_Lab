@@ -10,6 +10,7 @@ int maxvalue2 ; //用于存放实验2中生成的数据记录三元组中第3个
 int minvalue2; //用于存放实验2中生成的数据记录三元组中第3个元素取值的下限
 int recordcount1; //用于存放数据记录文件需要随机生成记录条数时条数值的上限
 int recordcount2; //用于存放数据记录文件需要随机生成记录条数时条数值的下限
+int type;//输出文件的类型
 }CONF;
 
 typedef struct DataItem

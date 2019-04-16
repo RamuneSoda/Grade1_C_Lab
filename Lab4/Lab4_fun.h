@@ -20,3 +20,5 @@ void mkdir_m(char *);
 int GetOffset(char *);
 int count(char *);
 void iniconf(CONF*);
+void buildTxt(CONF*, DATAITEM*, char*);
+void buildBin(CONF*, DATAITEM*, char*);

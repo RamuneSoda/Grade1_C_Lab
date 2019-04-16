@@ -56,7 +56,7 @@ void run (int argc , char* argv[])
             if(isNum(argv[1], strlen(argv[1])))//命令行参数是数值？
             {
                 info.number = atoi(argv[1]);//从命令行参数中取出记录条数信息写入配置信息变量
-                flag++;
+                flag++;                
                 break;
             }
 
@@ -102,6 +102,16 @@ void run (int argc , char* argv[])
             }
             else
             {
+                if(~strcmp(argv[1], "-1"))
+                {
+                    info.type = 1;
+                    break;
+                }
+                if(~strcmp(argv[1], "-2"))
+                {
+                    info.type = 2;
+                    break;
+                }
                 printf("Command-line Argument ERROR!\n");//提示命令行参数不合法
                 return;
             }

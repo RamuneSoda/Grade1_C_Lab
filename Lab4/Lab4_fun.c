@@ -149,42 +149,39 @@ void BuildDataFile(CONF *info)
 {
     mkdir_m(info->filesavepath);//若用户输入的路径不存在，则创建该路径
     DATAITEM *data = NULL;
-    malloc(info->number*sizeof(int)*3);
-
+    data = (DATAITEM*)malloc(sizeof(DATAITEM) * info->number);
+    
 
     char RealPath[1000];
-    FILE *op;
 
     strcpy(RealPath, info->filesavepath);
     strcat(strcat(RealPath,"/"), info->filename); //从配置信息变量中获取数据文件存放目录与文件名，将其拼装为完整的文件路径
-    op = fopen (RealPath, "w");//打开文件并清空文件中的已有内容
-   
-
-    if(op != NULL)//文件打开成功？
+    
+    //从配置信息中取出记录条数并写入文件
+    for(int i = 0; i < info->number; i++)//执行数据条数次
     {
-        //从配置信息中取出记录条数并写入文件
-        for(int i = 0; i < info->number; i++)//执行数据条数次
+        data[i].x = random(info->minvalue1,info->maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第一个元素
+        data[i].y = random(info->minvalue1,info->maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第二个元素
+        while(data[i].x == data[i].y)//第一、第二个元素相等
         {
-            tem[i][0] = random(info->minvalue1,info->maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第一个元素
-            tem[i][1] = random(info->minvalue1,info->maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第二个元素
-            while(tem[i][0] == tem[i][1])//第一、第二个元素相等
-            {
-                tem[i][1] = random(info->minvalue1,info->maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第二个元素
-            }
-            tem[i][2] = random(info->minvalue2,info->maxvalue2);//调用随机函数获取一个指定范围内的整数，作为第三个元素
-            //将三个元素形成一条记录数据，暂存入数据容器
+            data[i].y = random(info->minvalue1,info->maxvalue1);//调用随机函数获取一个指定范围内的整数，作为第二个元素
         }
-        for(int i =0; i < info->number; i++)
-        {
-            fprintf(op, "%d %d %d\n", tem[i][0], tem[i][1], tem[i][2]);//将暂存在数据容器中的数据写入数据记录文件保存并关闭文件，输出文件生成成功提示信息
-        }
-        
+        data[i].z = random(info->minvalue2,info->maxvalue2);//调用随机函数获取一个指定范围内的整数，作为第三个元素
+        //将三个元素形成一条记录数据，暂存入数据容器
     }
-    else
+
+    switch (info->type)
     {
-        printf("OPEN FILE ERROR!\n");//输出错误提示
-        return;
-    }    
+    case 1:
+        buildBin(&info, data, RealPath);
+        break;
+    case 2:
+        buildTxt(&info, data, RealPath);
+        break; 
+    default:
+        buildBin(&info, data, RealPath);
+        buildTxt(&info, data, RealPath);
+    }
 }
 
 /*
@@ -327,6 +324,56 @@ void iniconf(CONF *info)
     fscanf(op, "%d", &info->minvalue2);
     fscanf(op, "%d", &info->recordcount1);
     fscanf(op, "%d", &info->recordcount2);
+    info->type = 0;
 
     fclose(op);
+}
+
+void buildBin(CONF *info, DATAITEM *data,char* RealPath)
+{
+    if(strstr(RealPath, ".txt") == RealPath + strlen(RealPath) - 4)
+    {
+        RealPath[strlen(RealPath) - 3] = 'd';
+        RealPath[strlen(RealPath) - 2] = 'a';
+    }
+
+    FILE *op;
+    op = fopen (RealPath, "w");//打开文件并清空文件中的已有内容
+
+    if(op != NULL)//文件打开成功？
+    {                
+        fwrite(&info->number, sizeof(int), 4, op);
+        fwrite(data, sizeof(DATAITEM), info->number, op);        
+    }
+    else
+    {
+        printf("OPEN FILE ERROR!\n");//输出错误提示
+        return;
+    }
+}
+
+void buildTxt(CONF *info, DATAITEM *data,char* RealPath)
+{
+    if(strstr(RealPath, ".dat") == RealPath + strlen(RealPath) - 4)
+    {
+        RealPath[strlen(RealPath) - 3] = 't';
+        RealPath[strlen(RealPath) - 2] = 'x';
+    }
+
+    FILE *op;
+    op = fopen (RealPath, "w");//打开文件并清空文件中的已有内容
+
+    if(op != NULL)//文件打开成功？
+    {                
+        fprintf(op, "%d\n",info->number);
+        for(int i =0; i < info->number; i++)
+        {
+            fprintf(op, "%d %d %d\n", data[i].x, data[i].y, data[i].z);//将暂存在数据容器中的数据写入数据记录文件保存并关闭文件，输出文件生成成功提示信息
+        }       
+    }
+    else
+    {
+        printf("OPEN FILE ERROR!\n");//输出错误提示
+        return;
+    }
 }
