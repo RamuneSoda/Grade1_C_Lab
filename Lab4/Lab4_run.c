@@ -100,21 +100,6 @@ void run (int argc , char* argv[])
                     info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
                 }
             }
-            else
-            {
-                if(~strcmp(argv[1], "-1"))
-                {
-                    info.type = 1;
-                    break;
-                }
-                if(~strcmp(argv[1], "-2"))
-                {
-                    info.type = 2;
-                    break;
-                }
-                printf("Command-line Argument ERROR!\n");//提示命令行参数不合法
-                return;
-            }
             break;
         case 3:
             if(isNum(argv[1], strlen(argv[1])))//第一个参数是数值
@@ -174,5 +159,28 @@ void run (int argc , char* argv[])
         DivPath(input, &info);//将用户输入的文件路径拆分成文件名和文件存储目录写入配置信息变量
     }
 
+    printf("Please choose the type of the output. (txt/dat/both)\n");//提示用户输入文件存储路径
+    while(1)
+    {
+        scanf("%s",input);
+        fflush(stdin);
+        if(strcmp(input,"dat") == 0)
+        {
+            info.type = 1;
+            break;
+        }
+        if(strcmp(input,"txt") == 0)
+        {
+            info.type = 2;
+            break;
+        }
+        if(strcmp(input,"both") == 0)
+        {
+            info.type = 0;
+            break;
+        }
+        printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
+    }
+    
     BuildDataFile(&info);//调用生成数据文件函数，根据配置信息生成数据文件(流程见图3-2)
 }

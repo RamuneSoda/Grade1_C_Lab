@@ -148,7 +148,8 @@ int isFileExist(char *path)
 void BuildDataFile(CONF *info)
 {
     mkdir_m(info->filesavepath);//若用户输入的路径不存在，则创建该路径
-    DATAITEM *data = NULL;
+
+    DATAITEM *data = NULL;//动态内存申请
     data = (DATAITEM*)malloc(sizeof(DATAITEM) * info->number);
     
 
@@ -170,17 +171,40 @@ void BuildDataFile(CONF *info)
         //将三个元素形成一条记录数据，暂存入数据容器
     }
 
+	clock_t start,finish;
+	double TheTimes; 
+
     switch (info->type)
     {
+
     case 1:
-        buildBin(&info, data, RealPath);
+        start=clock();
+        buildBin(info, data, RealPath);
+        finish=clock();
+        TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
+        printf("output binary file needs %fs\n",TheTimes);
         break;
+
     case 2:
-        buildTxt(&info, data, RealPath);
+        start=clock();
+        buildTxt(info, data, RealPath);
+        finish=clock();
+        TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
+        printf("output txt file needs %fs\n",TheTimes);
         break; 
+
     default:
-        buildBin(&info, data, RealPath);
-        buildTxt(&info, data, RealPath);
+        start=clock();
+        buildBin(info, data, RealPath);
+        finish=clock();
+        TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
+        printf("output binary file needs %fs\n",TheTimes);
+
+        start=clock();
+        buildTxt(info, data, RealPath);
+        finish=clock();
+        TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
+        printf("output txt file needs %fs\n",TheTimes);
     }
 }
 
