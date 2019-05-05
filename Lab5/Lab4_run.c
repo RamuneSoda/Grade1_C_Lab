@@ -43,41 +43,38 @@ void run (int argc , char* argv[])
     switch (argc)
     {
         case 1:
-            printf("Input the lines of the data\n");//提示用户输入记录条数
-            while(1)
-            {
-                scanf("%s",input);
-                fflush(stdin);
-                if(isNum(input, strlen(input)))
-                {
-                    break;
-                }
-                printf("INPUT ERROR! PLEASE INPUT AN NUMBER!\n");//提示错误信息
-            }
-            printf("Randomly generate the number of data?(Y/N)\n");//询问是否随机生成记录条数
-
-
+            printf("是否随机生成记录条数?(y/n)\n");//询问是否随机生成记录条数
             while(1)
             {
                 scanf("%s",tem);
                 fflush(stdin);
-                if((tem[0] == 'Y') || (tem[0] == 'N'))
+                if((tem[0] == 'y') || (tem[0] == 'n'))
                 {
                     break;
                 }
-                printf("INPUT ERROR! PLEASE RETRY.\n");
-                printf("Randomly generate the number of data?(Y/N)\n");
+                printf("输入错误！请重试。\n");
+                printf("是否随机生成记录条数?(y/n)\n");
             }
 
-            if(tem[0] == 'Y')//是
+            if(tem[0] == 'y')//是
             {
                 info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
             }
             else //否
             {
+                printf("请输入记录条数:\n");//提示用户输入记录条数
+                while(1)
+                {
+                    scanf("%s",input);
+                    fflush(stdin);
+                    if(isNum(input, strlen(input)))
+                    {
+                        break;
+                    }
+                    printf("输入错误!请输入一个数字。\n");//提示错误信息
+                }   
                 info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
-            }
-               
+            }                                      
             flag++;
             break;
         case 2:
@@ -168,7 +165,7 @@ void run (int argc , char* argv[])
             }
         case 4:
             {
-                info.number = random(info.recordcount2, info.recordcount1);
+                info.number = random(info.recordcount2, info.recordcount1);                
                 if(strcmp(argv[3],"dat") == 0)
                 {
                     info.type = 1;
@@ -183,8 +180,29 @@ void run (int argc , char* argv[])
                 {
                     info.type = 0;
                     break;
-                }                
+                }
             }
+        /*case 5:
+            {
+                strcpy(info.filesavepath, argv[1]);
+                strcpy(info.filename, argv[2]);
+                info.number = atoi(argv[3]);
+                if(strcmp(argv[4],"dat") == 0)
+                {
+                    info.type = 1;
+                    break;
+                }
+                if(strcmp(argv[4],"txt") == 0)
+                {
+                    info.type = 2;
+                    break;
+                }
+                if(strcmp(argv[4],"both") == 0)
+                {
+                    info.type = 0;
+                    break;
+                }
+            }*/
         default:
             printf("Too many parameter!\n");
             break;
@@ -192,7 +210,7 @@ void run (int argc , char* argv[])
 
     if(flag == 1)
     {
-        printf("Please input the path\n");//提示用户输入文件存储路径
+        printf("请输入文件存储路径:\n");//提示用户输入文件存储路径
         while(1)
         {
             scanf("%s",input);
@@ -201,14 +219,19 @@ void run (int argc , char* argv[])
             {
                 break;
             }
-            printf("INPUT ERROR! PLEASE RETRY.\n");//提示错误信息
+            printf("输入错误!请输入正确路径。\n");//提示错误信息
         }
-        DivPath(input, &info);//将用户输入的文件路径拆分成文件名和文件存储目录写入配置信息变量
+        transRel(input, &info);
+
+        printf("请输入文件名:\n");//提示用户输入文件名
+        scanf("%s",input);
+        fflush(stdin);
+        strcpy(info.filename, input);
     }
 
-    if(argc != 4)
+    if(argc < 4)
     {
-        printf("Please choose the type of the output. (txt/dat/both)\n");//提示用户输入文件存储路径
+        printf("请选择输出数据文件类型(txt/dat/both)\n");
         while(1)
         {
             scanf("%s",input);

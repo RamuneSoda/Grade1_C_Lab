@@ -1,12 +1,8 @@
 cc = gcc
-deps_1 = Lab4_fun.h Lab4_run.h Lab4_data.h
-obj_1 = Lab4.o Lab4_fun.o Lab4_run.o
-deps_2 = Lab5_fun.h Lab5_run.h
-obj_2 = Lab5.o Lab5_fun.o Lab5_run.o
+deps = Lab5_fun.h Lab5_run.h Lab5_data.h
+dc = Lab5.c Lab5_run.c Lab5_fun.c
 
-Lab4: $(obj_1)
-	$(cc) -o Lab4 $(obj_1)
-%.o: %.c $(deps_1)
-	$(cc) -c $< -o $@
+Lab5: $(dc) $(deps)
+	$(cc) $(dc) -o Lab5 -g
 clean:
 	rm -f *.o

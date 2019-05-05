@@ -1,0 +1,10 @@
+cc = gcc
+deps = Lab5_fun.h Lab5_run.h Lab5_data.h
+obj = Lab5.o Lab5_fun.o Lab5_run.o
+
+Lab5: $(obj)
+	$(cc)  -o Lab5 $(obj)
+%.o: %.c $(deps)
+	$(cc)  -c $< -o $@
+clean:
+	rm -f *.o

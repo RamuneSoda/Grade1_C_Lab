@@ -220,7 +220,7 @@ void BuildDataFile(CONF *info)
 void DivPath(char *path,  CONF *info_1)
 {
     int i;
-    if(isRelPath(path))//判断是否为相对路径。若是，将其转换为相对路径
+    if(isRelPath(path))//判断是否为相对路径。若是，将其转换为绝对路径
     {
         
         char cwd[100];
@@ -402,4 +402,35 @@ void buildTxt(CONF *info, DATAITEM *data,char* RealPath)
         printf("OPEN FILE ERROR!\n");//输出错误提示
         return;
     }
+}
+
+void transRel(char *path,  CONF *info)
+{
+    if(isRelPath(path))//判断是否为相对路径。若是，将其转换为绝对路径
+    {
+        
+        char cwd[100];
+        char *index1, *index2, *name;
+        int cut = count(path);
+
+        _getcwd(cwd,sizeof(cwd));//将工作区目录储存在字符数组cwd中
+
+        for(int i = 1; i <= cut ; i++)//从后往前找若干个分隔符，并就将其前面的所有字符组成新的字符串
+        {
+            index1 = strrchr(cwd,'/');
+            index2 = strrchr(cwd,'\\');
+            if(index1 > index2)
+            {
+                *index1 = '\0';
+            }
+            else
+            {
+                *index2 = '\0';
+            }
+        }
+        name = GetOffset(path) + path - 1;//将“../”与“./”后的路径储存在name中
+        strcat(cwd, name);
+        strcpy(path, cwd);//将相对路径转换为绝对路径，重新储存在path中，供后续使用
+    }
+    strcpy(info->filesavepath, path);
 }
