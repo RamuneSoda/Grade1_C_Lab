@@ -184,7 +184,7 @@ void BuildDataFile(CONF *info)
         buildBin(info, data, RealPath);
         finish=clock();
         TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
-        printf("output binary file needs %fs\n",TheTimes);
+        printf("Output binary file took %fs\n",TheTimes);
         break;
 
     case 2:
@@ -192,7 +192,7 @@ void BuildDataFile(CONF *info)
         buildTxt(info, data, RealPath);
         finish=clock();
         TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
-        printf("output txt file needs %fs\n",TheTimes);
+        printf("Output txt file took %fs\n",TheTimes);
         break; 
 
     default:
@@ -200,13 +200,13 @@ void BuildDataFile(CONF *info)
         buildBin(info, data, RealPath);
         finish=clock();
         TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
-        printf("output binary file needs %fs\n",TheTimes);
+        printf("Output binary file took %fs\n",TheTimes);
 
         start=clock();
         buildTxt(info, data, RealPath);
         finish=clock();
         TheTimes=(double)(finish-start)/CLOCKS_PER_SEC;
-        printf("output txt file needs %fs\n",TheTimes);
+        printf("Output txt file took %fs\n",TheTimes);
     }
 }
 

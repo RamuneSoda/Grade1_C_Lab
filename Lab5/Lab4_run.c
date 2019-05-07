@@ -165,7 +165,7 @@ void run (int argc , char* argv[])
             }
         case 4:
             {
-                info.number = random(info.recordcount2, info.recordcount1);                
+                info.number = random(info.recordcount2, info.recordcount1);
                 if(strcmp(argv[3],"dat") == 0)
                 {
                     info.type = 1;
@@ -182,11 +182,42 @@ void run (int argc , char* argv[])
                     break;
                 }
             }
-        /*case 5:
+        case 5:
             {
-                strcpy(info.filesavepath, argv[1]);
-                strcpy(info.filename, argv[2]);
-                info.number = atoi(argv[3]);
+                printf("是否随机生成记录条数?(y/n)\n");//询问是否随机生成记录条数
+                while(1)
+                {
+                    scanf("%s",tem);
+                    fflush(stdin);
+                    if((tem[0] == 'y') || (tem[0] == 'n'))
+                    {
+                        break;
+                    }   
+                    printf("输入错误！请重试。\n");
+                    printf("是否随机生成记录条数?(y/n)\n");
+                }
+
+                if(tem[0] == 'y')//是
+                {
+                    info.number = random(info.recordcount2,info.recordcount1);//随机生成记录条数数写入配置信息变量
+                }
+                else //否
+                {
+                    printf("请输入记录条数:\n");//提示用户输入记录条数
+                    while(1)
+                    {
+                        scanf("%s",input);
+                        fflush(stdin);
+                        if(isNum(input, strlen(input)))
+                        {
+                            break;
+                        }
+                        printf("输入错误!请输入一个数字。\n");//提示错误信息
+                    }      
+                    info.number = atoi(input);//将用户输入的记录数信息写入配置信息变量
+                }                                      
+                flag++;
+
                 if(strcmp(argv[4],"dat") == 0)
                 {
                     info.type = 1;
@@ -202,7 +233,7 @@ void run (int argc , char* argv[])
                     info.type = 0;
                     break;
                 }
-            }*/
+            }
         default:
             printf("Too many parameter!\n");
             break;
@@ -229,7 +260,7 @@ void run (int argc , char* argv[])
         strcpy(info.filename, input);
     }
 
-    if(argc < 4)
+    if(argc != 4 && argc != 5)
     {
         printf("请选择输出数据文件类型(txt/dat/both)\n");
         while(1)

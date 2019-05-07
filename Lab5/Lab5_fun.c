@@ -9,18 +9,67 @@ void iniconf(CONF *info)
     fscanf(op, "%s", info->filename);
 
     transRel(info);
+    realPath(info);
+
+    getMode(info);
+    
+    fclose(op);
+}
+
+void initLink(DATASTRUCT **h, DATASTRUCT **t, int n)
+{
+    for(int i = 0; i < n; i++)
+    {
+        DATASTRUCT *newnode;
+        newnode = malloc(sizeof(DATASTRUCT));
+        //getinfo
+        if(*h == NULL){
+            *h = newnode;
+            *t = h;
+            newnode->pNextItem = NULL;
+        }
+        else
+        {
+            (*t)->pNextItem = newnode;
+            (*t) = (*t)->pNextItem;
+            (*t)->pNextItem = NULL; 
+        }
+        
+    }
+}
+
+void realPath(CONF *info)
+{
     char realPath[1000];
     strcpy(realPath, info->filesavepath);
     strcat(strcat(realPath,"/"), info->filename);
     strcpy(info->realPath,realPath); //从配置信息变量中获取数据文件存放目录与文件名，将其拼装为完整的文件路径，并储存到配置文件中
+}
 
+void getNum(CONF *info)
+{
+    //读取数据记录文件中的数据条数，并储存到配置文件中
+    FILE *op;
+    
+    if(strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
+    {
+        op = fopen(info->realPath, "rt+");
+        fscanf(op, "%d", &info->number);
+    }
+    else
+    {
+        op = fopen(info->realPath, "rt+");
+        fread(&info->number, sizeof(int), 4, op);
+    }
+    
     fclose(op);
+}
 
-//读取数据记录文件中的数据条数，并储存到配置文件中
-    op = fopen(info->realPath,"r");
-
-    fscanf(op, "%d", &info->number);
-
+void getMode(CONF *info)
+{
+    FILE *op;
+    op = fopen("MODE.ini", "r");
+    fscanf(op, "%d", &info->mode);
     fclose(op);
 }
 
@@ -102,15 +151,94 @@ void read_array(CONF *info, int (*arr)[3])
     FILE *op = NULL;
     op = fopen(info->realPath,"r");
 
-    fscanf(op, "%d", &arr[0][0]);
-    for(int i = 1; i <= info->number; i++)
+    if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
     {
-        for(int j = 0; j <= 2; j++)
+        fscanf(op, "%d", &arr[0][0]);
+        for(int i = 1; i <= info->number; i++)
         {
-            fscanf(op, "%d", &arr[i][j]);
+            for(int j = 0; j <= 2; j++)
+            {
+                fscanf(op, "%d", &arr[i][j]);
+            }
         }
     }
+    else
+    {
+        //fread();
+    }      
 
     fclose(op);
 }
 
+void Manual_read_array(CONF *info, int (*arr)[3])
+{
+    char input[100];
+
+    printf("请输入文件的存储位置\n");
+    scanf("%s", input);
+    strcpy(info->filesavepath, input);
+
+    printf("请输入文件文件名\n");
+    scanf("%s", input);
+    strcpy(info->filename, input);
+
+    transRel(info);
+    realPath(info);
+    getNum(info);
+
+    read_array(info, arr);
+}
+
+void show_array(int (*arr)[3])
+{
+    printf("\n数据条数为：%d\n", arr[0][0]);
+    printf("各数据如下：\n");
+    for(int i = 1; i <= arr[0][0]; i++)
+    {
+        printf("%d %d %d\n", arr[i][0], arr[i][1], arr[i][2]);
+    }
+}
+
+void read_struct(CONF *info, DATASTRUCT structArr[])
+{
+    FILE *op = NULL;
+    op = fopen(info->realPath,"r");
+
+    if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
+    {
+        fscanf(op, "%d", &structArr[0].x);
+        for(int i = 1; i <= info->number; i++)
+        {
+            fscanf(op, "%d %d %d", &structArr[i].x, &structArr[i].y, &structArr[i].z);
+        }
+    }
+    else
+    {
+        //fread();
+    }      
+
+    fclose(op);
+    return;
+}
+
+void read_PointerStruct(CONF *info, DATASTRUCT *a[])
+{
+    FILE *op = NULL;
+    op = fopen(info->realPath,"r");
+
+    if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
+    {
+        fscanf(op, "%d", &((*a[0]).x));
+        for(int i = 1; i <= info->number; i++)
+        {
+            fscanf(op, "%d %d %d", &((*a[i])).x, &((*a[i])).y, &((*a[i])).z);
+        }
+    }
+    else
+    {
+        //fread();
+    }      
+
+    fclose(op);
+    return;    
+}
