@@ -20,24 +20,24 @@ void run(void)
 
     /*动态申请二维数组内存空间*/
     int (*dataArray)[3] = NULL;
-    //dataArray = (int (*)[3])malloc(sizeof(int (*)[3]) * (info.number + 1));
+    dataArray = (int (*)[3])malloc(sizeof(int (*)[3]) * (info.number + 1));
     
     
     /*动态申请结构体数组内存空间*/
-    DATASTRUCT *dataStructs = (DATASTRUCT*)malloc(sizeof(DATASTRUCT) * info.number);
+    DATASTRUCT *dataStructs = (DATASTRUCT*)malloc(sizeof(DATASTRUCT) * (info.number + 1));
 
     /*动态申请指针数组内存空间*/
-    DATASTRUCT **pStruct = (DATASTRUCT**)malloc(sizeof(DATASTRUCT*) * info.number);
+    DATASTRUCT **pStruct = (DATASTRUCT**)malloc(sizeof(DATASTRUCT*) * (info.number + 1));
     for(int i = 0; i <= info.number; i++)
     {
         pStruct[i] = (DATASTRUCT*)malloc(sizeof(DATASTRUCT));
     }
 
     /*初始化单向链表*/
-    DATASTRUCT **head, **tail;
-    *head = NULL;
-    *tail = NULL;
-    initLink(head, tail, info.number);
+    DATASTRUCT *head, *tail;
+    head = NULL;
+    tail = NULL;
+    //initLink(head, tail, info.number);
     
 
     while (1)
@@ -122,7 +122,7 @@ void run(void)
                 case 1://自动模式
                     iniconf(&info);
                     getNum(&info);
-                    dataArray = (int (*)[3])malloc(sizeof(int (*)[3]) * (info.number + 1));
+                    //dataArray = (int (*)[3])malloc(sizeof(int (*)[3]) * (info.number + 1));
                     if (dataArray == NULL)
                     {
                         printf("Malloc Error\n");
@@ -144,14 +144,18 @@ void run(void)
                 /*读取指定数据记录文件（结构体数组存储方式）*/
                 iniconf(&info);
                 read_struct(&info, dataStructs);
+                show_struct(dataStructs);
                 break;
             case 5:
                 /*读取指定数据记录文件（指针数组存储方式）*/
                 iniconf(&info);
+                read_PointerStruct(&info, pStruct);
                 
                 break;
             case 6:
                 /*读取指定数据记录文件（链表存储方式）*/
+                initLink(&info, &head, &tail, info.number);
+                ShowLinkData(head);
                 break;
             case 7:
                 /*调用实验 4 生成数据记录文件，同时读取数据记录文件（文本方式输出，二维数组方式存储）*/

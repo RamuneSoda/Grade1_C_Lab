@@ -6,5 +6,5 @@ Lab5: $(dc) $(deps)
 	$(cc) $(dc) -o Lab5
 clean:
 	rm -f *.o
-g:
+love:
 	$(cc) $(dc) -o Lab5 -g

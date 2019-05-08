@@ -16,26 +16,63 @@ void iniconf(CONF *info)
     fclose(op);
 }
 
-void initLink(DATASTRUCT **h, DATASTRUCT **t, int n)
+void initLink(CONF *info,DATASTRUCT **h, DATASTRUCT **t, int n)
 {
-    for(int i = 0; i < n; i++)
+    FILE *op = NULL;
+    op = fopen(info->realPath,"r");
+
+    for(int i = 0; i <= n; i++)
     {
         DATASTRUCT *newnode;
         newnode = malloc(sizeof(DATASTRUCT));
-        //getinfo
-        if(*h == NULL){
+        
+        if(*h == NULL)
+        {
             *h = newnode;
-            *t = h;
+            *t = *h;
             newnode->pNextItem = NULL;
+            //getinfo
+            if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
+            {
+                if(newnode == *h)
+                {
+                    fscanf(op, "%d", &newnode->x);
+                }
+                else
+                {
+                    fscanf(op, "%d %d %d", &newnode->x, &newnode->y, &newnode->z);
+                }               
+            }
+            else
+            {
+                //fread();
+            }     
         }
         else
         {
             (*t)->pNextItem = newnode;
             (*t) = (*t)->pNextItem;
-            (*t)->pNextItem = NULL; 
+            (*t)->pNextItem = NULL;
+            //getinfo
+            if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
+            {
+                if(newnode == *h)
+                {
+                    fscanf(op, "%d", &newnode->x);
+                }
+                else
+                {
+                    fscanf(op, "%d %d %d", &newnode->x, &newnode->y, &newnode->z);
+                }               
+            }
+            else
+            {
+                //fread();
+            }    
         }
         
     }
+    fclose(op);
 }
 
 void realPath(CONF *info)
@@ -228,10 +265,10 @@ void read_PointerStruct(CONF *info, DATASTRUCT *a[])
 
     if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
     {
-        fscanf(op, "%d", &((*a[0]).x));
+        fscanf(op, "%d", &(a[0]->x));
         for(int i = 1; i <= info->number; i++)
         {
-            fscanf(op, "%d %d %d", &((*a[i])).x, &((*a[i])).y, &((*a[i])).z);
+            fscanf(op, "%d %d %d", &(a[i]->x), &(a[i]->y), &(a[i]->z));
         }
     }
     else
@@ -241,4 +278,61 @@ void read_PointerStruct(CONF *info, DATASTRUCT *a[])
 
     fclose(op);
     return;    
+}
+
+void getinfo(CONF *info, DATASTRUCT *node, DATASTRUCT *head)
+{
+    FILE *op = NULL;
+    op = fopen(info->realPath,"r");
+
+    if (strstr(info->realPath, "txt") == info->realPath + strlen(info->realPath) - 3)
+    {
+        if(node == head)
+        {
+            fscanf(op, "%d", &node->x);
+        }
+        else
+        {
+            fscanf(op, "%d %d %d", &node->x, &node->y, &node->z);
+        }               
+    }
+    else
+    {
+        //fread();
+    }      
+
+
+    fclose(op);
+    return;
+}
+
+void ShowLinkData(DATASTRUCT *pHead)
+{
+    DATASTRUCT *pNode;
+    if(pHead == NULL)
+    {
+        return;
+    }
+    for(pNode = pHead; pNode != NULL; pNode = pNode->pNextItem)
+    {
+        if(pNode == pHead)
+        {
+            printf("%d\n", pNode->x);
+        }
+        else
+        {
+            printf("%d %d %d\n", pNode->x, pNode->y, pNode->z);
+        }                
+    }
+    return;
+}
+
+void show_struct(DATASTRUCT data[])
+{
+    printf("\n数据条数为：%d\n", data[0].x);
+    printf("各数据如下：\n");
+    for(int i = 1; i <= data[0].x; i++)
+    {
+        printf("%d %d %d\n", data[i].x, data[i].y, data[i].z);
+    }
 }
