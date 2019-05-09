@@ -368,8 +368,11 @@ void buildBin(CONF *info, DATAITEM *data,char* RealPath)
 
     if(op != NULL)//文件打开成功？
     {                
-        fwrite(&info->number, sizeof(int), 4, op);
-        fwrite(data, sizeof(DATAITEM), info->number, op);        
+        fwrite(&info->number, sizeof(int), 1, op);
+        for(int i = 0; i <=  info->number; i++)
+        {
+            fwrite(&data[i], sizeof(DATAITEM), 1, op); 
+        }              
     }
     else
     {

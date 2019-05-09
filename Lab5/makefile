@@ -8,3 +8,5 @@ clean:
 	rm -f *.o
 love:
 	$(cc) $(dc) -o Lab5 -g
+4:
+	gcc -o Lab4 Lab4.c Lab4_fun.c Lab4_run.c

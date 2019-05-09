@@ -45,7 +45,16 @@ void initLink(CONF *info,DATASTRUCT **h, DATASTRUCT **t, int n)
             }
             else
             {
-                //fread();
+                if(newnode == *h)
+                {
+                    fread(&newnode->x, sizeof(int), 1, op);
+                }
+                else
+                {
+                    fread(&newnode->x, sizeof(int), 1, op);
+                    fread(&newnode->y, sizeof(int), 1, op);
+                    fread(&newnode->z, sizeof(int), 1, op);
+                }
             }     
         }
         else
@@ -67,10 +76,18 @@ void initLink(CONF *info,DATASTRUCT **h, DATASTRUCT **t, int n)
             }
             else
             {
-                //fread();
+                if(newnode == *h)
+                {
+                    fread(&newnode->x, sizeof(int), 1, op);
+                }
+                else
+                {
+                    fread(&newnode->x, sizeof(int), 1, op);
+                    fread(&newnode->y, sizeof(int), 1, op);
+                    fread(&newnode->z, sizeof(int), 1, op);
+                }
             }    
-        }
-        
+        }        
     }
     fclose(op);
 }
@@ -96,7 +113,7 @@ void getNum(CONF *info)
     else
     {
         op = fopen(info->realPath, "rt+");
-        fread(&info->number, sizeof(int), 4, op);
+        fread(&info->number, sizeof(int), 1, op);
     }
     
     fclose(op);
@@ -193,7 +210,7 @@ void read_array(CONF *info, int (*arr)[3])
         fscanf(op, "%d", &arr[0][0]);
         for(int i = 1; i <= info->number; i++)
         {
-            for(int j = 0; j <= 2; j++)
+            for(int j = 0; j < 3; j++)
             {
                 fscanf(op, "%d", &arr[i][j]);
             }
@@ -201,13 +218,20 @@ void read_array(CONF *info, int (*arr)[3])
     }
     else
     {
-        //fread();
+        fread(&arr[0][0], sizeof(int), 1, op);
+        for(int i = 1; i <= info->number; i++)
+        {
+            for(int j = 0; j < 3; j++)
+            {
+                fread(&arr[i][j], sizeof(int), 1, op);
+            }            
+        }
     }      
 
     fclose(op);
 }
 
-void Manual_read_array(CONF *info, int (*arr)[3])
+void Manual_read(CONF *info)
 {
     char input[100];
 
@@ -222,13 +246,11 @@ void Manual_read_array(CONF *info, int (*arr)[3])
     transRel(info);
     realPath(info);
     getNum(info);
-
-    read_array(info, arr);
 }
 
 void show_array(int (*arr)[3])
 {
-    printf("\n数据条数为：%d\n", arr[0][0]);
+    printf("\n数据条数为：\n%d\n", arr[0][0]);
     printf("各数据如下：\n");
     for(int i = 1; i <= arr[0][0]; i++)
     {
@@ -251,7 +273,13 @@ void read_struct(CONF *info, DATASTRUCT structArr[])
     }
     else
     {
-        //fread();
+        fread(&structArr[0].x, sizeof(int), 1, op);
+        for(int i = 1; i <= info->number; i++)
+        {            
+            fread(&structArr[i].x, sizeof(int), 1, op);
+            fread(&structArr[i].y, sizeof(int), 1, op);
+            fread(&structArr[i].z, sizeof(int), 1, op);
+        }
     }      
 
     fclose(op);
@@ -273,7 +301,13 @@ void read_PointerStruct(CONF *info, DATASTRUCT *a[])
     }
     else
     {
-        //fread();
+        fread(&(a[0]->x), sizeof(int), 1, op);
+        for(int i = 1; i <= info->number; i++)
+        {            
+            fread(&(a[i]->x), sizeof(int), 1, op);
+            fread(&(a[i]->y), sizeof(int), 1, op);
+            fread(&(a[i]->z), sizeof(int), 1, op);
+        }
     }      
 
     fclose(op);
@@ -317,7 +351,8 @@ void ShowLinkData(DATASTRUCT *pHead)
     {
         if(pNode == pHead)
         {
-            printf("%d\n", pNode->x);
+            printf("\n数据条数为：\n%d\n", pNode->x);
+            printf("各数据如下：\n");
         }
         else
         {
@@ -329,10 +364,21 @@ void ShowLinkData(DATASTRUCT *pHead)
 
 void show_struct(DATASTRUCT data[])
 {
-    printf("\n数据条数为：%d\n", data[0].x);
+    printf("\n数据条数为：\n%d\n", data[0].x);
     printf("各数据如下：\n");
     for(int i = 1; i <= data[0].x; i++)
     {
         printf("%d %d %d\n", data[i].x, data[i].y, data[i].z);
+    }
+}
+
+void show_PointerStruct(DATASTRUCT *a[])
+{
+    
+    printf("\n数据条数为：\n%d\n", a[0]->x);
+    printf("各数据如下：\n");
+    for(int i = 1; i <= a[0]->x; i++)
+    {
+        printf("%d %d %d\n", a[i]->x, a[i]->y, a[i]->z);
     }
 }
