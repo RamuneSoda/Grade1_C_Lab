@@ -1,4 +1,4 @@
-#include "Lab5_run.h"
+#include "Lab5_main.h"
 
 int main ()
 {

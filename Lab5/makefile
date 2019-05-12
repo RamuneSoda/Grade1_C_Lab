@@ -1,6 +1,6 @@
 cc = gcc
-deps = Lab5_fun.h Lab5_run.h Lab5_data.h
-dc = Lab5.c Lab5_run.c Lab5_fun.c
+deps = Lab5_call.h Lab5_conf.h Lab5_data.h Lab5_loadfile.h Lab5_main.h Lab5_init.h
+dc = Lab5.c Lab5_main.c Lab5_init.c Lab5_call.c Lab5_conf.c Lab5_loadfile.c Lab5_view.c
 
 Lab5: $(dc) $(deps)
 	$(cc) $(dc) -o Lab5

@@ -1,17 +1,19 @@
-#include "Lab5_run.h"
-#include "Lab5_fun.h"
-
-
+#include "Lab5_main.h"
+#include "Lab5_init.h"
+#include "Lab5_call.h"
+#include "Lab5_loadfile.h"
+#include "Lab5_view.h"
+#include "Lab5_conf.h"
 
 void run(void)
 {
     system("chcp 65001");
     //自检
-    /*if(自检错误)
+    if(~isFileExist("./Lab4.exe"))
     {
-        Error!
+        printf("Lab4.exe不存在！\n");
         return;
-    }*/
+    }
     //加载系统参数
     CONF info;
     iniconf(&info);
@@ -82,45 +84,19 @@ void run(void)
             {
             case 1:
             /*调用实验 4 程序生成记录文件（文本方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 txt");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 txt");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }
+                lab4_write(1, info.mode, &info);
+                
                 break;
             case 2:
             /*调用实验 4 程序生成记录文件（二进制方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    /*if(strstr(info.realPath, ".txt") == info.realPath + strlen(info.realPath) - 4)
-                    {
-                        info.realPath[strlen(info.realPath) - 3] = 'd';
-                        info.realPath[strlen(info.realPath) - 2] = 'a';
-                    }*/
-                    system("Lab4 0 0 dat");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 dat");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }                
+                lab4_write(2, info.mode, &info);
                 break;
             case 3:
             /*读取指定数据记录文件（二维数组存储方式）*/
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_array(&info, dataArray);
                     show_array(dataArray);
@@ -140,7 +116,7 @@ void run(void)
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_struct(&info, dataStructs);
                     show_struct(dataStructs);
@@ -161,7 +137,7 @@ void run(void)
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_PointerStruct(&info, pStruct);
                     show_PointerStruct(pStruct);
@@ -202,7 +178,7 @@ void run(void)
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_array(&info, dataArray);
                     show_array(dataArray);
@@ -222,24 +198,13 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（文本方式输出，结构体数组方式存储）*/
                 
                 /*调用实验 4 程序生成记录文件（文本方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 txt");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 txt");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }              
+                lab4_write(2, info.mode, &info);         
                 
                 /*读取指定数据记录文件（结构体数组存储方式）*/
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_struct(&info, dataStructs);
                     show_struct(dataStructs);
@@ -259,24 +224,13 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（文本方式输出，指针数组方式存储）*/
 
                 /*调用实验 4 程序生成记录文件（文本方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 txt");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 txt");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }   
+                lab4_write(2, info.mode, &info);  
                 
                 /*读取指定数据记录文件（指针数组存储方式）*/
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_PointerStruct(&info, pStruct);
                     show_PointerStruct(pStruct);
@@ -296,18 +250,7 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（文本方式输出，链表方式存储）*/
 
                 /*调用实验 4 程序生成记录文件（文本方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 txt");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 txt");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }           
+                lab4_write(2, info.mode, &info);         
 
                 /*读取指定数据记录文件（链表存储方式）*/
                 initLink(&info, &head, &tail, info.number);
@@ -318,24 +261,13 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（二进制方式输出，二维数组方式存储）*/
                 
                 /*调用实验 4 程序生成记录文件（二进制方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 dat");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 dat");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }           
+                lab4_write(2, info.mode, &info);  
 
                 /*读取指定数据记录文件（二维数组存储方式）*/
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_array(&info, dataArray);
                     show_array(dataArray);
@@ -355,24 +287,13 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（二进制方式输出，结构体数组方式存储）*/
                 
                 /*调用实验 4 程序生成记录文件（二进制方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 dat");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 dat");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }
+                lab4_write(2, info.mode, &info);
 
                 /*读取指定数据记录文件（结构体数组存储方式）*/
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_struct(&info, dataStructs);
                     show_struct(dataStructs);
@@ -392,24 +313,13 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（二进制方式输出，指针数组方式存储）*/
                 
                 /*调用实验 4 程序生成记录文件（二进制方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 dat");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 dat");  
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }
+                lab4_write(2, info.mode, &info);
 
                 /*读取指定数据记录文件（指针数组存储方式）*/
                 switch (info.mode)
                 {
                 case 1://自动模式
-                    iniconf(&info);
+                    transRel(&info);
                     getNum(&info);
                     read_PointerStruct(&info, pStruct);
                     show_PointerStruct(pStruct);
@@ -429,18 +339,7 @@ void run(void)
             /*调用实验 4 生成数据记录文件，同时读取数据记录文件（二进制方式输出，链表方式存储）*/
                 
                 /*调用实验 4 程序生成记录文件（二进制方式）*/
-                switch (info.mode)
-                {
-                case 1://自动模式
-                    system("Lab4 0 0 dat");
-                    break;
-                case 2://交互模式
-                    system("Lab4 0 0 0 dat");
-                    break;
-                default:
-                    printf("输入模式选择错误。使用自动模式请输1，交互模式请输2。");
-                    break;
-                }
+                lab4_write(2, info.mode, &info);
 
                 /*读取指定数据记录文件（链表存储方式）*/
                 initLink(&info, &head, &tail, info.number);
@@ -449,7 +348,8 @@ void run(void)
                 break;
             case 15:
                 /*重新设置配置参数值*/
-                system("notepad conf.ini");
+                changeConf(&info);
+                iniconf(&info);
                 break;
             default:
                 break;
