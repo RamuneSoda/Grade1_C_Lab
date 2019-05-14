@@ -15,4 +15,3 @@ void getNum(CONF *);
 void getMode(CONF *);
 void transRel(CONF *);
 int isFileExist(char []);
-
