@@ -3,85 +3,176 @@
 void nextStatus()
 {
     //读取电梯当前运行状态及当前楼层m(elevatorstate.current_floor)
-    if(0)//电梯处于上行状态((elevatorstate.run_state == "U")
+    int m = eleState.current_floor, flag = 0, f, t;
+    SERVELISTNODE *pNode;
+
+    if (eleState.run_state == 'U') //电梯处于上行状态((elevatorstate.run_state == "U")
     {
-        //遍历电梯的服务指令队列
+        for (pNode = serListHead.head; pNode != NULL && pNode->next_node != NULL; pNode = pNode->next_node) //遍历电梯的服务指令队列
         {
-            //检查电梯对当前用户指令的服务状态(servelist.serve_state)
-            if(0)//"服务前" servelist.serve_state == 'P'
+            if (pNode == serListHead.head)
             {
-                if(0)//servelist.user_call.user_floor == m + 1
+                f = pNode->user_call->user_floor;
+                t = pNode->user_call->user_target;
+
+                if (serListHead.head->serve_state = 'P')
                 {
-                    //elevatorstate.run_state == "S"
-                    //servelist.servestate = "E"
+                    if (f == m + 1)
+                    {
+                        eleState.run_state = 'S';
+                        serListHead.head->serve_state = 'E';
+                    }
+                    else
+                    {
+                        flag++;
+                    }
+                }
+                else if (serListHead.head->serve_state = 'E')
+                {
+                    if (f == m + 1)
+                    {
+                        eleState.run_state = 'S'; //电梯运行状态改为停止状态
+                        free(serListHead.head);
+                        serListHead.head = pNode->next_node; //删除头节点
+                    }
+                    else
+                    {
+                        flag++;
+                    }
                 }
             }
-
-            if(0)//"服务中 servelist.serve_state == 'E'
+            else
             {
-                if(0)//servelist.user_call.user_target == m + 1
+                flag++;
+            }
+
+            if (flag != 0)
+            {
+                f = pNode->next_node->user_call->user_floor;
+                t = pNode->next_node->user_call->user_target;
+
+                if (serListHead.head->serve_state = 'P')
                 {
-                    //elevatorstate.run_state == "S"
-                    //将该指令从当前服务指令队列删除
+                    if (f == m + 1)
+                    {
+                        eleState.run_state = 'S';
+                        serListHead.head->serve_state = 'E';
+                    }
+                }
+                else if (serListHead.head->serve_state = 'E')
+                {
+                    if (f == m + 1)
+                    {
+                        eleState.run_state = 'S'; //电梯运行状态改为停止状态
+                        free(pNode->next_node);
+                        pNode->next_node = pNode->next_node->next_node; //删除该节点
+                    }
                 }
             }
         }
-        //将当前楼层改为(m + 1) elevatorstate.current_floor++;
+        eleState.current_floor++;  //将当前楼层改为(m + 1)
     }
-    
-    if(0)//电梯处于下行状态(elevatorstate.run_state == "D")
+
+    else if (eleState.run_state == 'D') //电梯处于下行状态(elevatorstate.run_state == "D")
     {
-        //遍历电梯的服务指令队列
+        for (pNode = serListHead.head; pNode != NULL && pNode->next_node != NULL; pNode = pNode->next_node) //遍历电梯的服务指令队列
         {
-            //检查电梯对当前用户指令的服务状态(servelist.serve_state)
-            if(0)//"服务前" servelist.serve_state == 'P'
+            if (pNode == serListHead.head)
             {
-                if(0)//servelist.user_call.user_floor == m - 1
+                f = pNode->user_call->user_floor;
+                t = pNode->user_call->user_target;
+
+                if (serListHead.head->serve_state = 'P')
                 {
-                    //elevatorstate.run_state == "S"
-                    //servelist.servestate = "E"
+                    if (f == m - 1)
+                    {
+                        eleState.run_state = 'S';
+                        serListHead.head->serve_state = 'E';
+                    }
+                    else
+                    {
+                        flag++;
+                    }
+                }
+                else if (serListHead.head->serve_state = 'E')
+                {
+                    if (f == m - 1)
+                    {
+                        eleState.run_state = 'S'; //电梯运行状态改为停止状态
+                        free(serListHead.head);
+                        serListHead.head = pNode->next_node; //删除头节点
+                    }
+                    else
+                    {
+                        flag++;
+                    }
                 }
             }
-
-            if(0)//"服务中 servelist.serve_state == 'E'
+            else
             {
-                if(0)//servelist.user_call.user_target == m - 1
+                flag++;
+            }
+
+            if (flag != 0)
+            {
+                f = pNode->next_node->user_call->user_floor;
+                t = pNode->next_node->user_call->user_target;
+
+                if (serListHead.head->serve_state = 'P')
                 {
-                    //elevatorstate.run_state == "S"
-                    //将该指令从当前服务指令队列删除
+                    if (f == m + 1)
+                    {
+                        eleState.run_state = 'S';
+                        serListHead.head->serve_state = 'E';
+                    }
+                }
+                else if (serListHead.head->serve_state = 'E')
+                {
+                    if (f == m + 1)
+                    {
+                        eleState.run_state = 'S'; //电梯运行状态改为停止状态
+                        free(pNode->next_node);
+                        pNode->next_node = pNode->next_node->next_node; //删除该节点
+                    }
                 }
             }
         }
+        eleState.current_floor--;  //将当前楼层改为(m - 1)
         //将当前楼层改为(m - 1) elevatorstate.current_floor--;
     }
 
-    if(0)//电梯处于静止状态(elevatorstate.run_state == "S")
+    else if (eleState.run_state == 'S') //电梯处于静止状态
     {
-        //取出电梯服务指令队列(servelist)
-        //检查电梯对该用户指令的服务状态(servelist.serve_state)
-        if(0)//"服务前" servelist.serve_state == "P"
+        if(serListHead.head->serve_state == 'P')
         {
-            if(0)//servelist.user_call.user_floor > m
+            if(serListHead.head->user_call->user_floor > m)
             {
-                //elevatorstate.run_state = "U"
+                eleState.run_state = 'U';
             }
             else
             {
-                //elevatorstate.run_state = "D"
-            } 
+                eleState.run_state = 'D';
+            }
         }
 
-        if(0)//"服务前" servelist.serve_state == "E"
+        else if(serListHead.head->serve_state == 'E')
         {
-            if(0)//servelist.user_call.user_target > m
+            if(serListHead.head->user_call->user_target > m)
             {
-                //elevatorstate.run_state = "U"
+                eleState.run_state = 'U';
             }
             else
             {
-                //elevatorstate.run_state = "D"
+                eleState.run_state = 'D';
             }
         }
         //楼层不做改变
     }
+
+    showNextStatus();  //输出下一时刻的状态
+}
+
+void showNextStatus()
+{
+    printf("%5d%5d%5c\n", time, eleState.current_floor, eleState.run_state);
 }

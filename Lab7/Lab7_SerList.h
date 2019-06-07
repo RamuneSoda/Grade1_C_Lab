@@ -2,5 +2,5 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void nextStatus();
-void showNextStatus();
+void addSerList(USERCALL*);
+void setSerState(char);
