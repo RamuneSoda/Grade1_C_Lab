@@ -35,12 +35,13 @@ void run()
     sort_struct(num);
     callType();
 
-    while(1)  //服务未完毕
+    while(time < 50)  //服务未完毕
     {
         getStatus();//获取当前状态及用户指令相应情况();
         nextStatus();//根据当前状态计算下一时刻状态();
         //计时器++
-        Sleep(1000);
+        //Sleep(500);
+        showNextStatus();  //输出下一时刻的状态
         time++;
     }
 }

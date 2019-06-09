@@ -44,9 +44,16 @@ void anotherUser()
 
     if (eleState.run_state == 'U') //电梯运行状态为上行(U)
     {
-        for (pNode = resListHead.head; pNode != NULL && pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+        pNode = resListHead.head;
+        //for (pNode = resListHead.head; pNode != NULL || pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+        while (1)
         {
             //取出当前指令用户所在楼层(responselist.user_call.user_floor)f与目标楼层t(responselist.user_call.user_target)
+            if (pNode == NULL)
+            {
+                break;
+            }
+
             if (pNode == resListHead.head)
             {
                 f = pNode->user_call->user_floor;
@@ -55,13 +62,19 @@ void anotherUser()
                 if (f > m && t > f) //f > m && t > f
                 {
                     /*从待响应指令序列(responselist)中取出并删除*/
-                    addSerList(pNode->user_call);        //将其加入当前服务指令序列(servelist)
-                    setSerState('P');                    //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
+                    addSerList(pNode->user_call); //将其加入当前服务指令序列(servelist)
+                    setSerState('P');             //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
+                    pNode = pNode->next_node;
                     free(resListHead.head);
-                    resListHead.head = pNode->next_node; //删除头节点
+                    resListHead.head = pNode; //删除头节点
+                    continue;
                 }
                 else
                 {
+                    if (serListHead.head->next_node == NULL)
+                    {
+                        break;
+                    }
                     flag++;
                 }
             }
@@ -78,18 +91,34 @@ void anotherUser()
                 if (f > m && t > f) //f > m && t > f
                 {
                     /*从待响应指令序列(responselist)中取出并删除*/
-                    addSerList(pNode->next_node->user_call);        //将其加入当前服务指令序列(servelist)
-                    setSerState('P');                               //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
+                    addSerList(pNode->next_node->user_call); //将其加入当前服务指令序列(servelist)
+                    setSerState('P');                        //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
                     free(pNode->next_node);
                     pNode->next_node = pNode->next_node->next_node; //删除该节点
                 }
+            }
+
+            if (pNode->next_node == NULL)
+            {
+                break;
             }
         }
     }
     else if (eleState.run_state == 'D') //电梯运行状态为下行(D)
     {
-        for (pNode = resListHead.head; pNode != NULL && pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+        //for (pNode = resListHead.head; pNode != NULL || pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+        pNode = resListHead.head;
+        while (1)
         {
+            if (pNode == NULL)
+            {
+                break;
+            }
+
+            if (pNode->next_node == NULL)
+            {
+                break;
+            }
             flag = 0;
             //取出当前指令用户所在楼层(responselist.user_call.user_floor)f与目标楼层t(responselist.user_call.user_target)
             if (pNode == resListHead.head)
@@ -100,13 +129,19 @@ void anotherUser()
                 if (f < m && t < f) //f > m && t > f
                 {
                     /*从待响应指令序列(responselist)中取出并删除*/
-                    addSerList(pNode->user_call);        //将其加入当前服务指令序列(servelist)
-                    setSerState('P');                    //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
+                    addSerList(pNode->user_call); //将其加入当前服务指令序列(servelist)
+                    setSerState('P');             //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
+                    pNode = pNode->next_node;
                     free(resListHead.head);
-                    resListHead.head = pNode->next_node; //删除头节点
+                    resListHead.head = pNode; //删除头节点
+                    continue;
                 }
                 else
                 {
+                    if (serListHead.head->next_node == NULL)
+                    {
+                        break;
+                    }
                     flag++;
                 }
             }
@@ -123,17 +158,26 @@ void anotherUser()
                 if (f < m && t < f) //f > m && t > f
                 {
                     /*从待响应指令序列(responselist)中取出并删除*/
-                    addSerList(pNode->next_node->user_call);        //将其加入当前服务指令序列(servelist)
-                    setSerState('P');                               //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
+                    addSerList(pNode->next_node->user_call); //将其加入当前服务指令序列(servelist)
+                    setSerState('P');                        //setState//将其服务状态(servelist.serve_state)设置为"服务前"(P)
                     free(pNode->next_node);
                     pNode->next_node = pNode->next_node->next_node; //删除该节点
                 }
+            }
+            if (pNode->next_node == NULL)
+            {
+                break;
             }
         }
     }
 
     else if (eleState.run_state == 'S') //电梯处于停止状态
     {
+        if (serListHead.head == NULL)
+        {
+            return;
+        }
+
         int flg = 0;
         char state;
         state = serListHead.head->serve_state;
@@ -156,8 +200,19 @@ void anotherUser()
 
         if (flg == 0) //flg == 0
         {
-            for (pNode = resListHead.head; pNode != NULL && pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+            //for (pNode = resListHead.head; pNode != NULL || pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+            pNode = resListHead.head;
+            while (1)
             {
+                if (pNode == NULL)
+                {
+                    break;
+                }
+
+                if (pNode->next_node == NULL)
+                {
+                    break;
+                }
                 flag = 0;
                 //取出当前指令用户所在楼层(responselist.user_call.user_floor)f与目标楼层t(responselist.user_call.user_target)
                 if (pNode == resListHead.head)
@@ -168,7 +223,7 @@ void anotherUser()
                     if (f <= m && t < f)
                     {
                         /*从待响应指令序列(responselist)中取出并删除*/
-                        addSerList(pNode->user_call);        //将其加入当前服务指令序列(servelist)
+                        addSerList(pNode->user_call); //将其加入当前服务指令序列(servelist)
                         if (f == m)
                         {
                             setSerState('E');
@@ -177,11 +232,17 @@ void anotherUser()
                         {
                             setSerState('P');
                         }
+                        pNode = pNode->next_node;
                         free(resListHead.head);
-                        resListHead.head = pNode->next_node; //删除头节点
+                        resListHead.head = pNode; //删除头节点
+                        continue;
                     }
                     else
                     {
+                        if (serListHead.head->next_node == NULL)
+                        {
+                            break;
+                        }
                         flag++;
                     }
                 }
@@ -198,7 +259,7 @@ void anotherUser()
                     if (f <= m && t < f)
                     {
                         /*从待响应指令序列(responselist)中取出并删除*/
-                        addSerList(pNode->next_node->user_call);        //将其加入当前服务指令序列(servelist)
+                        addSerList(pNode->next_node->user_call); //将其加入当前服务指令序列(servelist)
                         if (f == m)
                         {
                             setSerState('E');
@@ -210,13 +271,30 @@ void anotherUser()
                         free(pNode->next_node);
                         pNode->next_node = pNode->next_node->next_node; //删除该节点
                     }
+                }
+                if (pNode->next_node == NULL)
+                {
+                    break;
                 }
             }
         }
         else
         {
-            for (pNode = resListHead.head; pNode != NULL && pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+
+            //for (pNode = resListHead.head; pNode != NULL || pNode->next_node != NULL; pNode = pNode->next_node) //遍历待响应指令序列(responselist)
+            pNode = resListHead.head;
+            while (1)
             {
+                if (pNode == NULL)
+                {
+                    break;
+                }
+
+                if (pNode->next_node == NULL)
+                {
+                    break;
+                }
+
                 flag = 0;
                 //取出当前指令用户所在楼层(responselist.user_call.user_floor)f与目标楼层t(responselist.user_call.user_target)
                 if (pNode == resListHead.head)
@@ -227,7 +305,7 @@ void anotherUser()
                     if (f >= m && t > f)
                     {
                         /*从待响应指令序列(responselist)中取出并删除*/
-                        addSerList(pNode->user_call);        //将其加入当前服务指令序列(servelist)
+                        addSerList(pNode->user_call); //将其加入当前服务指令序列(servelist)
                         if (f == m)
                         {
                             setSerState('E');
@@ -236,11 +314,17 @@ void anotherUser()
                         {
                             setSerState('P');
                         }
+                        pNode = pNode->next_node;
                         free(resListHead.head);
-                        resListHead.head = pNode->next_node; //删除头节点
+                        resListHead.head = pNode; //删除头节点
+                        continue;
                     }
                     else
                     {
+                        if (serListHead.head->next_node == NULL)
+                        {
+                            break;
+                        }
                         flag++;
                     }
                 }
@@ -257,7 +341,7 @@ void anotherUser()
                     if (f >= m && t > f)
                     {
                         /*从待响应指令序列(responselist)中取出并删除*/
-                        addSerList(pNode->next_node->user_call);        //将其加入当前服务指令序列(servelist)
+                        addSerList(pNode->next_node->user_call); //将其加入当前服务指令序列(servelist)
                         if (f == m)
                         {
                             setSerState('P');
@@ -269,6 +353,10 @@ void anotherUser()
                         free(pNode->next_node);
                         pNode->next_node = pNode->next_node->next_node; //删除该节点
                     }
+                }
+                if (pNode->next_node == NULL)
+                {
+                    break;
                 }
             }
         }

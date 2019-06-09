@@ -3,7 +3,7 @@
 void addResList(USERCALL *call)
 {
     RESPONSELISTNODE *newnode;
-    newnode = malloc(sizeof(RESPONSELISTNODE));
+    newnode = (RESPONSELISTNODE *)malloc(sizeof(RESPONSELISTNODE));
     newnode->user_call = call;
 
     if(resListHead.head == NULL)

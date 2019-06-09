@@ -4,7 +4,7 @@
 void addSerList(USERCALL *call)
 {
     SERVELISTNODE *newnode;
-    newnode = malloc(sizeof(SERVELISTNODE));
+    newnode = (SERVELISTNODE *)malloc(sizeof(SERVELISTNODE));
     newnode->user_call = call;
 
     if(serListHead.head == NULL)
